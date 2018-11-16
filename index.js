@@ -1,7 +1,20 @@
 let http = require("http");
+let url = require("url");
 
 let server = http.createServer(function(req, res) {
+    // parse the passed url
+    let parsedUrl = url.parse(req.url, true);
+
+    // extract the path
+    let path = parsedUrl.pathname;
+    // strips the '/' from url
+    let trimmedPath = path.replace(/^\/+|\/+$/g, '');
+
+    // respond to the request
     res.end("Hello World!\n");
+
+    // spit out what client asked for 
+    console.log("Request is received on this path: " + trimmedPath);
 });
 
 server.listen(3000, function() {
