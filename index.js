@@ -10,6 +10,9 @@ let server = http.createServer(function(req, res) {
     // strips the '/' from url
     let trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
+    // get the query string as an object
+    let queryStringObject = parsedUrl.query;
+
     // get the HTTP method
     let method = req.method.toLowerCase();
 
@@ -17,7 +20,9 @@ let server = http.createServer(function(req, res) {
     res.end("Hello World!\n");
 
     // spit out what client asked for 
-    console.log("Method: " + method + "\nPath: " + trimmedPath);
+    console.log("Method:", method,
+                "\nPath:", trimmedPath,
+                "\nQuery:", queryStringObject);
 });
 
 server.listen(3000, function() {
