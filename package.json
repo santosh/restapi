@@ -1,0 +1,26 @@
+{
+  "name": "restapi",
+  "version": "1.0.0",
+  "description": "REST API demonstration.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santosh/restapi.git"
+  },
+  "keywords": [
+    "api",
+    "rest",
+    "javascript",
+    "node"
+  ],
+  "author": "Santosh Kumar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/santosh/restapi/issues"
+  },
+  "homepage": "https://github.com/santosh/restapi#readme"
+}
