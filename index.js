@@ -10,11 +10,14 @@ let server = http.createServer(function(req, res) {
     // strips the '/' from url
     let trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
+    // get the HTTP method
+    let method = req.method.toLowerCase();
+
     // respond to the request
     res.end("Hello World!\n");
 
     // spit out what client asked for 
-    console.log("Request is received on this path: " + trimmedPath);
+    console.log("Method: " + method + "\nPath: " + trimmedPath);
 });
 
 server.listen(3000, function() {
