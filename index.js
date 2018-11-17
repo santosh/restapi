@@ -16,12 +16,16 @@ let server = http.createServer(function(req, res) {
     // get the HTTP method
     let method = req.method.toLowerCase();
 
+    // get headers
+    let headers = req.headers;
+
     // respond to the request
     res.end("Hello World!\n");
 
     // spit out what client asked for 
     console.log("Method:", method,
                 "\nPath:", trimmedPath,
+                "\nHeaders:", headers,
                 "\nQuery:", queryStringObject);
 });
 
