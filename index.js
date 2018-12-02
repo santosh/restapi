@@ -1,40 +1,45 @@
 let http = require("http");
 let url = require("url");
-let StringDecoder = require("string_decoder").StringDecoder;
+let {
+    StringDecoder
+} = require("string_decoder");
 let config = require("./config");
 
-let server = http.createServer(function (req, res) {
-    // parse the passed url
+// TODO: We are using RequireJS, can we use ES6's "import" statement?
+// also need to refactor the export statements when doing..
+
+let server = http.createServer((req, res) => {
+    // parses the passed url
     let parsedUrl = url.parse(req.url, true);
 
-    // extract the path
+    // extracts the path
     let path = parsedUrl.pathname;
     // strips the '/' from url
     let trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
-    // get the query string as an object
+    // gets the query string as an object
     let queryStringObject = parsedUrl.query;
 
-    // get the HTTP method
+    // gets the HTTP method
     let method = req.method.toLowerCase();
 
-    // get headers
+    // gets headers
     let headers = req.headers;
 
-    // Get the  payload, if any
+    // gets the payload, if any
     let decoder = new StringDecoder('utf8');
     let buffer = '';
-    req.on('data', function (data) {
+    req.on('data', (data) => {
         buffer += decoder.write(data);
     });
-    req.on('end', function () {
+    req.on('end', () => {
         buffer += decoder.end();
 
         // choose the handler this request should go;
         // fallback to notFound handler
         let chosenHandler = typeof (router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
 
-        // construct the data objec to tsend to the handler
+        // construct the data objec to send to the handler
         let data = {
             'trimmedPath': trimmedPath,
             'queryStringObject': queryStringObject,
@@ -43,15 +48,15 @@ let server = http.createServer(function (req, res) {
             'payload': buffer
         };
 
-        // route the request to the handler specified in the router
-        chosenHandler(data, function (statusCode, payload) {
-            // use the statuscode called back by the handler or default to 200
+        // routes the request to the handler specified in the router
+        chosenHandler(data, (statusCode, payload) => {
+            // uses the statuscode called back by the handler or defaults to 200
             statusCode = typeof (statusCode) == 'number' ? statusCode : 200;
 
-            // use the payload called back by the handler, or default to an empty object.
+            // uses the payload called back by the handler, or default to an empty object.
             payload = typeof (payload) == 'object' ? payload : {};
 
-            // convert the payload to a string
+            // converts the payload to a string
             let payloadString = JSON.stringify(payload);
 
             // return the response
@@ -64,12 +69,13 @@ let server = http.createServer(function (req, res) {
                 "\nPath:", trimmedPath,
                 "\nHeaders:", headers,
                 "\nQuery:", queryStringObject,
-                "\nPayload:", buffer);
+                "\nPayload:", buffer,
+                "\n=============");
         });
     });
 });
 
-server.listen(config.port, function () {
+server.listen(config.port, () => {
     console.log(`The server is listenting on port ${config.port} in ${config.envName} mode.`);
 });
 
@@ -77,14 +83,14 @@ server.listen(config.port, function () {
 let handlers = {};
 
 // sample handler
-handlers.sample = function (data, callback) {
+handlers.sample = (data, callback) => {
     // callback a http status code and a payload object
     callback(406, {
         'name': 'sample handler'
     });
 };
 
-handlers.notFound = function (data, callback) {
+handlers.notFound = (data, callback) => {
     callback(404);
 };
 
