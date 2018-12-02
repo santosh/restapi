@@ -1,14 +1,44 @@
 let http = require("http");
+let https = require("https");
 let url = require("url");
 let {
     StringDecoder
 } = require("string_decoder");
 let config = require("./config");
+let fs = require('fs');
 
 // TODO: We are using RequireJS, can we use ES6's "import" statement?
 // also need to refactor the export statements when doing..
 
-let server = http.createServer((req, res) => {
+// instantiates the HTTP server
+let httpServer = http.createServer((req, res) => {
+    unifiedServer(req, res);
+});
+
+// start listening on the http server
+httpServer.listen(config.httpPort, () => {
+    console.log(`The server is listenting on port ${config.httpPort} in ${config.envName} mode.`);
+});
+
+// instantiates the HTTPS server
+let httpsServerOptions = {
+    'key': fs.readFileSync('./https/key.pem'),
+    'cert': fs.readFileSync('./https/cert.pem')
+};
+
+let httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+    unifiedServer(req, res);
+});
+
+// start listening on the HTTPS server
+httpsServer.listen(config.httpsPort, () => {
+    console.log(`The server is listenting on port ${config.httpsPort} in ${config.envName} mode.`);
+});
+
+
+
+// Handle both HTTP and HTTPS
+let unifiedServer = (req, res) => {
     // parses the passed url
     let parsedUrl = url.parse(req.url, true);
 
@@ -73,11 +103,7 @@ let server = http.createServer((req, res) => {
                 "\n=============");
         });
     });
-});
-
-server.listen(config.port, () => {
-    console.log(`The server is listenting on port ${config.port} in ${config.envName} mode.`);
-});
+};
 
 // define the handler
 let handlers = {};
